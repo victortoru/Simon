@@ -1,15 +1,10 @@
-package com.company;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         int opcion;
 
@@ -27,11 +22,11 @@ public class Main {
                     System.out.print("Introdueix el teu nom: ");
                     String nombreUsuario = scanner.nextLine();
 
-                    //Bloque creado para escribir y guardar el nombre y los intentos en el fichero
+                    //Bloque creado para escribir y guardar el nombre y los intentos en orden en el fichero
                     try {
                         BufferedWriter writer = new BufferedWriter(new FileWriter("puntuacions.txt", true));
                         writer.write(nombreUsuario + " ");
-                        int intentos = Opcio_1();
+                        int intentos = Opcio_1.opcio_1();
                         writer.write(intentos + "\n");
                         writer.close();
                         System.out.println("Dades guardades");
@@ -41,7 +36,28 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("Partida fitxer_cpu vs fitxer_jugador");
-                    // Agrega aquí la lógica para la opción 2
+                    // Leer el contenido del fichero jugades_cpu.txt
+                    List<Integer> jugadesCPU = new ArrayList<>();
+                    Scanner scannerCPU = new Scanner(new File("jugades_cpu.txt"));
+                    while (scannerCPU.hasNextLine()) {
+                        int jugadaCPU = scannerCPU.nextInt();
+                        jugadesCPU.add(jugadaCPU);
+                    }
+                    scannerCPU.close();
+
+                    // Leer el contenido del fichero jugades_gamer
+                    String nomGamer = "";
+                    List<Integer> jugadesGamer = new ArrayList<>();
+                    Scanner scannerGamer = new Scanner(new File("jugades_gamer.txt"));
+                    // Leer el nombre del gamer
+                    if (scannerGamer.hasNextLine()) {
+                        nomGamer = scannerGamer.nextLine();
+                    }
+                    while (scannerGamer.hasNextLine()) {
+                        int jugadaGamer = scannerGamer.nextInt();
+                        jugadesGamer.add(jugadaGamer);
+                    }
+                    scannerGamer.close();
                     break;
                 case 3:
                     System.out.println("Mostrar taula de puntuacions");
@@ -70,46 +86,4 @@ public class Main {
         System.out.println("4.- Sortir");
     }
 
-    public static int Opcio_1() {
-        Random random = new Random();
-        Scanner scanner = new Scanner(System.in);
-        List<Integer> numsCPU = new ArrayList<>();
-        List<Integer> numsJugador = new ArrayList<>();
-        int intentos = 0;
-        //Creamos el bucle para mostrar la secuencia de la CPU comparando con el JUGADOR
-        for (int i = 1; i <= 10; i++) {
-            System.out.print("CPU: ");
-            for (int num : numsCPU) {
-                System.out.print(num + " ");
-            }
-            System.out.println();
-
-            System.out.print("JUGADOR: ");
-            for (int num : numsJugador) {
-                System.out.print(num + " ");
-            }
-            System.out.println();
-            //Creamos el numero random 1-4
-            System.out.println("Partida " + i + ": Ha sortit");
-            int numeroRandom = random.nextInt(4) + 1;
-            numsCPU.add(numeroRandom);
-
-            //Interfaz para que responda el jugador
-            System.out.print("Escriu la resposta: ");
-            int numUsuario = scanner.nextInt();
-            numsJugador.add(numUsuario);
-            intentos++;
-
-            if (numsCPU.size() != numsJugador.size() || !numsCPU.equals(numsJugador)) {
-                System.out.println("¡Has fallat!");
-                break;
-            }
-        }
-
-        System.out.println("¡Has encertat totes les rondes!");
-        System.out.println("Nombre d'encerts: " + numsCPU.size());
-
-        scanner.close();
-        return intentos;
-    }
 }
