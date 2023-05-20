@@ -39,8 +39,6 @@ public class Opcio_1 {
                 break;
             }
         }
-
-        System.out.println("¡Has encertat totes les rondes!");
         System.out.println("Nombre d'encerts: " + numsCPU.size());
 
         return intentos;
